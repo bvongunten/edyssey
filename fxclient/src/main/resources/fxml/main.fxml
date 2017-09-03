@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="719.0" prefWidth="1079.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.nostromo.edyssey.fxclient.FxClientMainController">
+   <top>
+      <Pane prefHeight="138.0" prefWidth="807.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="31.0" layoutY="46.0" text="StarSystems" />
+            <Label layoutX="31.0" layoutY="75.0" text="Bodies" />
+            <Label layoutX="31.0" layoutY="103.0" prefHeight="17.0" prefWidth="64.0" text="Stations" />
+            <Label layoutX="31.0" layoutY="17.0" text="Database" />
+            <Label id="lblStarSystemsCount" fx:id="lblStarSystemCount" layoutX="116.0" layoutY="47.0" prefHeight="17.0" prefWidth="110.0" text="0" />
+            <Label id="lblBoddiesCount" fx:id="lblBodiesCount" layoutX="116.0" layoutY="76.0" prefHeight="17.0" prefWidth="102.0" text="0" />
+            <Label id="lblStationsCount" fx:id="lblStationsCount" layoutX="116.0" layoutY="104.0" prefHeight="17.0" prefWidth="110.0" text="0" />
+            <Button id="btnQuit" layoutX="916.0" layoutY="13.0" mnemonicParsing="false" onAction="#onQuitAction" prefHeight="25.0" prefWidth="100.0" text="Quit" />
+            <Button id="btnStart" layoutX="719.0" layoutY="13.0" mnemonicParsing="false" onAction="#onEddStart" prefHeight="25.0" prefWidth="100.0" text="Start EDDN Feed" />
+            <Button id="btnEnd" layoutX="719.0" layoutY="43.0" mnemonicParsing="false" onAction="#onEddnStop" prefHeight="25.0" prefWidth="100.0" text="Stop EDDN Feed" />
+            <Button id="btnRefresh" layoutX="116.0" layoutY="13.0" mnemonicParsing="false" onAction="#onDbRefresh" prefHeight="25.0" prefWidth="100.0" text="Refresh" />
+         </children></Pane>
+   </top>
+   <center>
+      <TextArea fx:id="txtLog" prefHeight="200.0" prefWidth="1012.0" BorderPane.alignment="CENTER" />
+   </center>
+   <bottom>
+      <Label fx:id="lblInfo" text="Info" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>
