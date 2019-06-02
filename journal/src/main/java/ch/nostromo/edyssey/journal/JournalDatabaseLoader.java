@@ -44,6 +44,8 @@ public class JournalDatabaseLoader {
 
 		for (Path path : files) {
 
+			if (path.endsWith(".log")) {
+
 			System.out.println("Reading file : " + path);
 
 			List<String> jsons = Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -76,7 +78,7 @@ public class JournalDatabaseLoader {
 				database.transactionCommit();
 				database.clearEntityManager();
 
-			}
+			}}
 		}
 	}
 

@@ -1,26 +1,7 @@
 package ch.nostromo.edyssey.eddn;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ch.nostromo.edyssey.database.Database;
-import ch.nostromo.edyssey.database.entities.Body;
-import ch.nostromo.edyssey.database.entities.BodyAtmosphereComposition;
-import ch.nostromo.edyssey.database.entities.BodyMaterial;
-import ch.nostromo.edyssey.database.entities.BodyRing;
-import ch.nostromo.edyssey.database.entities.StarSystem;
-import ch.nostromo.edyssey.database.entities.StarSystemFaction;
-import ch.nostromo.edyssey.database.entities.StarSystemFactionPendingState;
-import ch.nostromo.edyssey.database.entities.StarSystemFactionRecoveringState;
-import ch.nostromo.edyssey.database.entities.Station;
-import ch.nostromo.edyssey.database.entities.StationCommodity;
-import ch.nostromo.edyssey.database.entities.StationCommodityBlackMarket;
+import ch.nostromo.edyssey.database.entities.*;
 import ch.nostromo.edyssey.database.entities.references.Module;
 import ch.nostromo.edyssey.database.entities.references.PendingState;
 import ch.nostromo.edyssey.database.entities.references.RecoveringState;
@@ -32,6 +13,14 @@ import ch.nostromo.edyssey.eddn.json.commodity.JsonCommodityMessageEntry;
 import ch.nostromo.edyssey.eddn.json.journal.EddnJournal;
 import ch.nostromo.edyssey.eddn.json.outfitting.EddnOutfitting;
 import ch.nostromo.edyssey.eddn.json.shipyard.EddnShipyard;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EddnDatabaseLoader implements EddnConsumerListener {
 
@@ -41,13 +30,13 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
 
     EddnConsumer consumer;
     Database database;
-    
+
     EddnDatabaseLoaderListener eventListener;
 
 
     public EddnDatabaseLoader(Database database, EddnDatabaseLoaderListener eventListener) throws Exception {
-    	this.database = database;
-    	this.eventListener = eventListener;
+        this.database = database;
+        this.eventListener = eventListener;
     }
 
     public void startCollecting() throws IOException {
@@ -60,7 +49,7 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
         consumer = null;
         database = null;
     }
-    
+
     private Double toDouble(Object value) {
         if (value == null) {
             return null;
@@ -80,10 +69,19 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
         Station stationToEdit = database.getMainEntityHelper().getOrCreateStationInStarSystem(starSystem, stationName);
 
         // Add staiton values
-        String stationFaction = (String) valueMap.get("StationFaction");
-        if (stationFaction != null) {
-            stationToEdit.setStationFaction(database.getReferenceEntityHelper().getOrCreateFaction(stationFaction));
+        if (valueMap.get("StationFaction") instanceof String) {
+            String stationFaction = (String) valueMap.get("StationFaction");
+            if (stationFaction != null) {
+                stationToEdit.setStationFaction(database.getReferenceEntityHelper().getOrCreateFaction(stationFaction));
+            }
+
+        } else {
+            LinkedHashMap<String, String> stationFaction = (LinkedHashMap<String, String>) valueMap.get("StationFaction");
+            if (stationFaction != null) {
+                stationToEdit.setStationFaction(database.getReferenceEntityHelper().getOrCreateFaction(stationFaction.get("Name")));
+            }
         }
+
 
         String stationAllegiance = (String) valueMap.get("StationAllegiance");
         if (stationAllegiance != null) {
@@ -139,11 +137,18 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
             starSystem.setFactionState(database.getReferenceEntityHelper().getOrCreateFactionState(systemFactionState));
         }
 
-        String systemFaction = (String) valueMap.get("SystemFaction");
-        if (systemFaction != null) {
-            starSystem.setSystemFaction(database.getReferenceEntityHelper().getOrCreateFaction(systemFaction));
-        }
 
+        if (valueMap.get("SystemFaction") instanceof String) {
+            String systemFaction = (String) valueMap.get("SystemFaction");
+            if (systemFaction != null) {
+                starSystem.setSystemFaction(database.getReferenceEntityHelper().getOrCreateFaction(systemFaction));
+            }
+        } else {
+            LinkedHashMap<String, String> systemFaction = (LinkedHashMap) valueMap.get("SystemFaction");
+            if (systemFaction != null) {
+                starSystem.setSystemFaction(database.getReferenceEntityHelper().getOrCreateFaction(systemFaction.get("Name")));
+            }
+        }
         String systemSecurity = (String) valueMap.get("SystemSecurity");
         if (systemSecurity != null) {
             starSystem.setSystemSecurity(database.getReferenceEntityHelper().getOrCreateSecurity(systemSecurity));
@@ -429,27 +434,27 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
             starSystem.setStarPosZ(journal.getMessage().getStarPos().get(2));
 
             switch (journal.getMessage().getEvent()) {
-            case DOCKED: {
-                handleDockedJournalEntry(starSystem, journal.getMessage().getAdditionalProperties());
-                LOG.debug("Docked processed, StarSystem: " + starSystem);
-                break;
-            }
-            case FSD_JUMP: {
-                handleFSDJumpJournalEntry(starSystem, journal.getMessage().getAdditionalProperties());
-                LOG.debug("FSD Jump processed, StarSystem: " + starSystem);
-                break;
-            }
-            case LOCATION: {
-                handleLocationJournalEntry(starSystem, journal.getMessage().getAdditionalProperties());
-                LOG.debug("Location processed, StarSystem: " + starSystem);
-                break;
-            }
-            case SCAN:
-                handleScanJournalEntry(starSystem, journal.getMessage().getAdditionalProperties());
-                LOG.debug("Location processed, StarSystem: " + starSystem);
-                break;
-            default:
-                break;
+                case DOCKED: {
+                    handleDockedJournalEntry(starSystem, journal.getMessage().getAdditionalProperties());
+                    LOG.debug("Docked processed, StarSystem: " + starSystem);
+                    break;
+                }
+                case FSD_JUMP: {
+                    handleFSDJumpJournalEntry(starSystem, journal.getMessage().getAdditionalProperties());
+                    LOG.debug("FSD Jump processed, StarSystem: " + starSystem);
+                    break;
+                }
+                case LOCATION: {
+                    handleLocationJournalEntry(starSystem, journal.getMessage().getAdditionalProperties());
+                    LOG.debug("Location processed, StarSystem: " + starSystem);
+                    break;
+                }
+                case SCAN:
+                    handleScanJournalEntry(starSystem, journal.getMessage().getAdditionalProperties());
+                    LOG.debug("Location processed, StarSystem: " + starSystem);
+                    break;
+                default:
+                    break;
             }
 
             database.transactionCommit();
@@ -457,12 +462,11 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
 
             long totalMs = System.currentTimeMillis() - startMs;
 
-            String message ="Processed Journal event of Type " + journal.getMessage().getEvent() + " on StarSystem : " + starSystem.getId() + " in " + totalMs + " ms."; 
+            String message = "Processed Journal event of Type " + journal.getMessage().getEvent() + " on StarSystem : " + starSystem.getId() + " in " + totalMs + " ms.";
             eventListener.eddnMessageProcessed(message);
             LOG.info(message);
 
 
-            
         } catch (Exception e) {
             database.transactionRollback();
             throw e;
@@ -499,17 +503,42 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
 
             }
 
+            station.getStationCommoditiesProhibited().clear();
+            if (jsonCommodityBinding.getMessage().getProhibited() != null) {
+                for (String commodity : jsonCommodityBinding.getMessage().getProhibited()) {
+                    StationCommodityProhibited prohibitedCommodity = database.getMainEntityHelper().createStationCommodityProhibitedOnStation(station);
+                    prohibitedCommodity.setCommodity(database.getReferenceEntityHelper().getOrCreateCommodity(commodity));
+                }
+            }
+
+            station.getStationEconomies().clear();
+
+            if (jsonCommodityBinding.getMessage().getEconomies() != null) {
+                for (Map<String, Object> economy : jsonCommodityBinding.getMessage().getEconomies()) {
+                    StationEconomy stationEconomy = database.getMainEntityHelper().createStationEconomyOnStation(station);
+
+                    stationEconomy.setEconomy(database.getReferenceEntityHelper().getOrCreateEconomy((String) economy.get("name")));
+                    if (economy.get("proportion") instanceof Integer) {
+                        stationEconomy.setProportion(new Double((Integer) economy.get("proportion")));
+                    } else {
+                        stationEconomy.setProportion((Double) economy.get("proportion"));
+                    }
+                }
+            }
+
+
+
             database.transactionCommit();
             database.clearEntityManager();
 
+
             long totalMs = System.currentTimeMillis() - startMs;
 
-            String message ="Processed Commidity event on StarSystem.Station : " + starSystem.getId() + "." + station.getStationName() + " in " + totalMs + " ms."; 
+            String message = "Processed Commidity event on StarSystem.Station : " + starSystem.getId() + "." + station.getStationName() + " in " + totalMs + " ms.";
             eventListener.eddnMessageProcessed(message);
             LOG.info(message);
 
 
-            
         } catch (Exception e) {
             database.transactionRollback();
             throw e;
@@ -547,12 +576,11 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
 
             long totalMs = System.currentTimeMillis() - startMs;
 
-            String message ="Processed BlackMarket event on StarSystem.Station : " + starSystem.getId() + "." + station.getStationName() + " in " + totalMs + " ms."; 
+            String message = "Processed BlackMarket event on StarSystem.Station : " + starSystem.getId() + "." + station.getStationName() + " in " + totalMs + " ms.";
             eventListener.eddnMessageProcessed(message);
             LOG.info(message);
 
 
-            
         } catch (Exception e) {
             database.transactionRollback();
             throw e;
@@ -578,17 +606,17 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
                     station.getShipyard().add(ship);
                 }
             }
-            
+
             database.transactionCommit();
             database.clearEntityManager();
 
             long totalMs = System.currentTimeMillis() - startMs;
 
-            String message = "Processed Shipyard event on StarSystem.Station : " + starSystem.getId() + "." + station.getStationName() + " in " + totalMs + " ms."; 
+            String message = "Processed Shipyard event on StarSystem.Station : " + starSystem.getId() + "." + station.getStationName() + " in " + totalMs + " ms.";
             eventListener.eddnMessageProcessed(message);
             LOG.info(message);
 
-            
+
         } catch (Exception e) {
             database.transactionRollback();
             throw e;
@@ -618,7 +646,7 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
 
             long totalMs = System.currentTimeMillis() - startMs;
 
-            String message = "Processed Outfitting event on StarSystem.Station : " + starSystem.getId() + "." + station.getStationName() + " in " + totalMs + " ms."; 
+            String message = "Processed Outfitting event on StarSystem.Station : " + starSystem.getId() + "." + station.getStationName() + " in " + totalMs + " ms.";
             eventListener.eddnMessageProcessed(message);
             LOG.info(message);
 
@@ -658,11 +686,11 @@ public class EddnDatabaseLoader implements EddnConsumerListener {
             }
 
         } catch (Exception e) {
-        	eventListener.eddnMessageProcessed("Unable to parse/process json: " + json + "\n" + e.getMessage());
-        	LOG.error("Unable to parse json: " + json, e);
+            eventListener.eddnMessageProcessed("Unable to parse/process json: " + json + "\n" + e.getMessage());
+            LOG.error("Unable to parse json: " + json, e);
         }
- 
-    
+
+
     }
 
 }

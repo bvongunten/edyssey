@@ -3,6 +3,8 @@ package ch.nostromo.edyssey.eddn.json.shipyard;
 
 import java.util.Date;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -126,5 +128,14 @@ public class EddnShipyardMessage {
     public void setShips(Set<String> ships) {
         this.ships = ships;
     }
+
+
+    @JsonIgnore
+    @JsonProperty("marketId")
+    private String marketId;
+
+    @JsonIgnore
+    @JsonProperty("horizons")
+    private boolean horizons;
 
 }

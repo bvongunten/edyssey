@@ -1,7 +1,11 @@
 
 package ch.nostromo.edyssey.eddn.json.commodity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -11,43 +15,58 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "systemName",
     "stationName",
     "timestamp",
-    "commodities"
+    "commodities",
+        "economies",
+        "marketId",
+        "prohibited"
 })
 public class EddnCommodityMessage {
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("systemName")
     private String systemName;
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("stationName")
     private String stationName;
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("timestamp")
     private String timestamp;
+
+
+    @JsonProperty("economies")
+    private List<Map<String, Object>> economies;
+
+    @JsonProperty("marketId")
+    private String marketId;
+
+    @JsonProperty("prohibeted")
+    private List<String> prohibited;
+
+
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("commodities")
     private List<JsonCommodityMessageEntry> jsonCommodities = null;
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("systemName")
     public String getSystemName() {
@@ -55,9 +74,9 @@ public class EddnCommodityMessage {
     }
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("systemName")
     public void setSystemName(String systemName) {
@@ -65,9 +84,9 @@ public class EddnCommodityMessage {
     }
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("stationName")
     public String getStationName() {
@@ -75,9 +94,9 @@ public class EddnCommodityMessage {
     }
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("stationName")
     public void setStationName(String stationName) {
@@ -85,9 +104,9 @@ public class EddnCommodityMessage {
     }
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("timestamp")
     public String getTimestamp() {
@@ -95,9 +114,9 @@ public class EddnCommodityMessage {
     }
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("timestamp")
     public void setTimestamp(String timestamp) {
@@ -105,9 +124,9 @@ public class EddnCommodityMessage {
     }
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("commodities")
     public List<JsonCommodityMessageEntry> getCommodities() {
@@ -115,13 +134,43 @@ public class EddnCommodityMessage {
     }
 
     /**
-     * 
+     *
      * (Required)
-     * 
+     *
      */
     @JsonProperty("commodities")
     public void setCommodities(List<JsonCommodityMessageEntry> jsonCommodities) {
         this.jsonCommodities = jsonCommodities;
     }
 
+
+    @JsonProperty("economies")
+    public List<Map<String, Object>> getEconomies() {
+        return economies;
+    }
+
+    @JsonProperty("economies")
+    public void setEconomies(List<Map<String, Object>> economies) {
+        this.economies = economies;
+    }
+
+    @JsonProperty("marketId")
+    public String getMarketId() {
+        return marketId;
+    }
+
+    @JsonProperty("marketId")
+    public void setMarketId(String marketId) {
+        this.marketId = marketId;
+    }
+
+    @JsonProperty("prohibited")
+    public List<String> getProhibited() {
+        return prohibited;
+    }
+
+    @JsonProperty("prohibited")
+    public void setProhibited(List<String> prohibited) {
+        this.prohibited = prohibited;
+    }
 }

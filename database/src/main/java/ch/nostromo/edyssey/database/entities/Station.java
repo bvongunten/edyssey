@@ -69,6 +69,14 @@ public class Station extends BaseEntity implements Serializable{
     @OneToMany(mappedBy="station")
     private List<StationCommodityBlackMarket> stationCommoditiesBlackMarket = new ArrayList<>();
 
+    @OneToMany(mappedBy="station")
+    private List<StationCommodityProhibited> stationCommoditiesProhibited = new ArrayList<>();
+
+
+    @OneToMany(mappedBy="station")
+    private List<StationEconomy> stationEconomies = new ArrayList<>();
+
+
     @ManyToMany()
     private Set<Ship> shipyard = new HashSet<>();
 
@@ -214,6 +222,19 @@ public class Station extends BaseEntity implements Serializable{
 		this.stationCommoditiesBlackMarket = stationCommoditiesBlackMarket;
 	}
 
+    public List<StationEconomy> getStationEconomies() {
+        return stationEconomies;
+    }
 
+    public void setStationEconomies(List<StationEconomy> stationEconomies) {
+        this.stationEconomies = stationEconomies;
+    }
 
+    public List<StationCommodityProhibited> getStationCommoditiesProhibited() {
+        return stationCommoditiesProhibited;
+    }
+
+    public void setStationCommoditiesProhibited(List<StationCommodityProhibited> stationCommoditiesProhibited) {
+        this.stationCommoditiesProhibited = stationCommoditiesProhibited;
+    }
 }

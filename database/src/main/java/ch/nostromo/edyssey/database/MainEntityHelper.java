@@ -1,16 +1,6 @@
 package ch.nostromo.edyssey.database;
 
-import ch.nostromo.edyssey.database.entities.Body;
-import ch.nostromo.edyssey.database.entities.BodyAtmosphereComposition;
-import ch.nostromo.edyssey.database.entities.BodyMaterial;
-import ch.nostromo.edyssey.database.entities.BodyRing;
-import ch.nostromo.edyssey.database.entities.StarSystem;
-import ch.nostromo.edyssey.database.entities.StarSystemFaction;
-import ch.nostromo.edyssey.database.entities.StarSystemFactionPendingState;
-import ch.nostromo.edyssey.database.entities.StarSystemFactionRecoveringState;
-import ch.nostromo.edyssey.database.entities.Station;
-import ch.nostromo.edyssey.database.entities.StationCommodity;
-import ch.nostromo.edyssey.database.entities.StationCommodityBlackMarket;
+import ch.nostromo.edyssey.database.entities.*;
 
 public class MainEntityHelper {
 
@@ -110,6 +100,22 @@ public class MainEntityHelper {
 		database.persistEntity(result);
 
 		station.getStationCommodities().add(result);
+		return result;
+	}
+
+	public StationCommodityProhibited createStationCommodityProhibitedOnStation(Station station) {
+		StationCommodityProhibited result = new StationCommodityProhibited(station);
+		database.persistEntity(result);
+
+		station.getStationCommoditiesProhibited().add(result);
+		return result;
+	}
+
+	public StationEconomy createStationEconomyOnStation(Station station) {
+		StationEconomy result = new StationEconomy(station);
+		database.persistEntity(result);
+
+		station.getStationEconomies().add(result);
 		return result;
 	}
 

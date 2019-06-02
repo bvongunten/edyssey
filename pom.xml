@@ -15,6 +15,7 @@
 		<module>database</module>
 		<module>eddn</module>
 		<module>journal</module>
+		<module>cli</module>
 		<module>fxclient</module>
 	</modules>
 	

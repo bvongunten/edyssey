@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
     "demandBracket",
     "statusFlags"
 })
+
 public class JsonCommodityMessageEntry {
 
     /**
@@ -78,7 +79,7 @@ public class JsonCommodityMessageEntry {
      * 
      */
     @JsonProperty("demand")
-    private Integer demand;
+    private Long demand;
     /**
      * Note: A value of "" indicates that the commodity is not normally sold/purchased at this station, but is currently temporarily for sale/purchase
      * (Required)
@@ -217,7 +218,7 @@ public class JsonCommodityMessageEntry {
      * 
      */
     @JsonProperty("demand")
-    public Integer getDemand() {
+    public Long getDemand() {
         return demand;
     }
 
@@ -227,7 +228,7 @@ public class JsonCommodityMessageEntry {
      * 
      */
     @JsonProperty("demand")
-    public void setDemand(Integer demand) {
+    public void setDemand(Long demand) {
         this.demand = demand;
     }
 

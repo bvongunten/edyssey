@@ -42,7 +42,7 @@ public class StationCommodity extends BaseEntity implements Serializable {
 	private Integer sellPrice;
 
 	@Column
-	private Integer demand;
+	private Long demand;
 
 	@ManyToOne
 	private CommodityBracket demandBracket;
@@ -101,11 +101,11 @@ public class StationCommodity extends BaseEntity implements Serializable {
 		this.sellPrice = sellPrice;
 	}
 
-	public Integer getDemand() {
+	public Long getDemand() {
 		return demand;
 	}
 
-	public void setDemand(Integer demand) {
+	public void setDemand(Long demand) {
 		this.demand = demand;
 	}
 

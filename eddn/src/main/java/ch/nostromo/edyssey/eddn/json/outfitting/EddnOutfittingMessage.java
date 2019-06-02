@@ -3,6 +3,8 @@ package ch.nostromo.edyssey.eddn.json.outfitting;
 
 import java.util.Date;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -126,5 +128,13 @@ public class EddnOutfittingMessage {
     public void setModules(Set<String> modules) {
         this.modules = modules;
     }
+
+    @JsonIgnore
+    @JsonProperty("marketId")
+    private String marketId;
+
+    @JsonIgnore
+    @JsonProperty("horizons")
+    private boolean horizons;
 
 }

@@ -42,7 +42,7 @@ public class JournalDatabaseLoaderIT {
 	public void testFullLoad() throws IllegalArgumentException, IllegalAccessException, IOException {
 
 		JournalDatabaseLoader testee = new JournalDatabaseLoader(database);
-		testee.loadFullDirectory("Seeland", Paths.get("src/test/resources/testjournal/"));
+		testee.loadFullDirectory("Crosta", Paths.get("C:\\Users\\Bernhard von Gunten\\Documents\\Flightlog\\"));
 
 		@SuppressWarnings("unchecked")
 		List<StarSystem> starSystems = database.getEntityManager().createQuery("Select s from StarSystem s")
