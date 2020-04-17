@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+    
+    edyssey-postgres:
+        image: postgres
+        restart: always
+        ports:
+        - "5432:5432"
+        environment:
+            POSTGRES_PASSWORD: "edyssey"
+            POSTGRES_USER: "edyssey"
+            POSTGRES_DB: "edyssey"     
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+        volumes:
+        - postgres-data-edyssey:/var/lib/postgresql/data
+
+volumes:
+    postgres-data-edyssey:
