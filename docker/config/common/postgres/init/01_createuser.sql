@@ -1,0 +1,1 @@
+CREATE ROLE edyssey WITH LOGIN PASSWORD 'edyssey';
